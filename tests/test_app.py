@@ -1,7 +1,18 @@
 import unittest
 from app import app, db, Progress, Note
+from seed import DATA, MODULES, seed
+import inspect
 
 class AcademyTests(unittest.TestCase):
+    def test_seed_data_shape_and_signature(self):
+        self.assertEqual(len(MODULES),5)
+        self.assertEqual(len(DATA),30)
+        self.assertTrue(all(len(row)==8 for row in DATA))
+        self.assertEqual(
+            list(inspect.signature(seed).parameters),
+            ["app","db","Module","Lesson","Question","Progress"]
+        )
+
     def setUp(self):
         self.client=app.test_client()
         # Keep local learning data unchanged when tests are run on a real device.

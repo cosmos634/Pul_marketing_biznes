@@ -168,7 +168,7 @@ def import_data():
 with app.app_context():
     db.create_all()
     from seed import seed
-    seed()
+    seed(app, db, Module, Lesson, Question, Progress)
 
 if __name__=="__main__":
     app.run(host="127.0.0.1",port=5000,debug=True)

@@ -51,7 +51,8 @@ def seed():
             db.session.add(module); db.session.flush()
             for j in range(6):
                 day+=1
-                title,summary,theory,example,visual,task,case,takeaways=DATA[day-1]
+                title,theory,example,visual,task,case,takeaways=DATA[day-1]
+                summary=theory[:180]
                 lesson=Lesson(day=day,module_id=module.id,title=title,summary=summary,theory=theory,
                   example=example,visual=visual,task=task,case_study=case,takeaways=json.dumps(takeaways,ensure_ascii=False))
                 db.session.add(lesson); db.session.flush()

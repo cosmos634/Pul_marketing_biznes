@@ -1,5 +1,5 @@
 from pathlib import Path
-from datetime import datetime
+from datetime import datetime, timezone
 import json
 from flask import Flask, render_template, jsonify, request
 from flask_sqlalchemy import SQLAlchemy
@@ -38,7 +38,7 @@ class Progress(db.Model):
     day=db.Column(db.Integer,unique=True,nullable=False)
     completed=db.Column(db.Boolean,default=False)
     score=db.Column(db.Integer,default=0)
-    updated_at=db.Column(db.DateTime,default=datetime.utcnow,onupdate=datetime.utcnow)
+    updated_at=db.Column(db.DateTime(timezone=True),default=lambda: datetime.now(timezone.utc),onupdate=lambda: datetime.now(timezone.utc))
 
 class Question(db.Model):
     id=db.Column(db.Integer,primary_key=True)
@@ -52,7 +52,7 @@ class Note(db.Model):
     id=db.Column(db.Integer,primary_key=True)
     day=db.Column(db.Integer,nullable=False)
     body=db.Column(db.Text,default="")
-    updated_at=db.Column(db.DateTime,default=datetime.utcnow,onupdate=datetime.utcnow)
+    updated_at=db.Column(db.DateTime(timezone=True),default=lambda: datetime.now(timezone.utc),onupdate=lambda: datetime.now(timezone.utc))
 
 class Bookmark(db.Model):
     id=db.Column(db.Integer,primary_key=True)

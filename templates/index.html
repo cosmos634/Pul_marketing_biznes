@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="uz"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#10111b"><title>Biznes Akademiya</title><link rel="stylesheet" href="/static/style.css"></head>
+<body><div class="shell">
+<aside class="sidebar"><div class="brand"><span class="brand-icon">B</span><div><b>Biznes Akademiya</b><small>30 kunlik amaliy kurs</small></div></div>
+<nav><button class="nav active" data-view="dashboard">⌂ <span>Bosh sahifa</span></button><button class="nav" data-view="curriculum">▤ <span>Barcha darslar</span></button><button class="nav" data-view="bookmarks">☆ <span>Saqlanganlar</span></button></nav>
+<div class="side-bottom"><div class="mini-label">O‘QUV JARAYONI</div><div class="side-progress"><span id="sideProgress"></span></div><small id="sideCount">0 / 30 dars</small><p class="offline">● Offline rejim</p></div></aside>
+<main class="main"><header class="topbar"><div><span class="eyebrow">SHAXSIY O‘QUV MAYDONI</span><h1 id="pageTitle">Bosh sahifa</h1></div><div class="top-actions"><input id="search" placeholder="Dars qidirish..." aria-label="Dars qidirish"><button class="icon-btn" id="exportBtn" title="Ma’lumotlarni eksport qilish">⇩</button><label class="icon-btn import-label" title="JSON import">⇧<input id="importFile" type="file" accept="application/json" hidden></label></div></header>
+<section id="dashboardView">
+<div class="welcome"><div><span class="eyebrow light">BUGUNGI MAQSAD</span><h2>Bilimni amaliy natijaga aylantir.</h2><p>Har kuni bitta dars. Har darsdan bitta foydali xulosa.</p><button class="primary" id="continueBtn">4-kun darsini davom ettirish <span>→</span></button></div><div class="welcome-art">✦<div>30<br><small>KUN</small></div></div></div>
+<div class="stats"><article class="stat"><span>UMUMIY TARAQQIYOT</span><strong id="percent">10%</strong><small>30 darsdan</small></article><article class="stat"><span>TUGALLANGAN DARSLAR</span><strong id="doneCount">3</strong><small>ta dars</small></article><article class="stat"><span>JORIY DARS</span><strong id="currentDay">04</strong><small id="currentTitle">Pul va moliya</small></article></div>
+<div class="section-head"><div><span class="eyebrow">O‘QUV DASTURI</span><h2>5 ta asosiy modul</h2></div><button class="text-btn" data-goto="curriculum">Barchasini ko‘r →</button></div>
+<div class="module-grid">{% for m in modules %}<button class="module-card" data-module="{{m.id}}"><span class="module-icon">{{m.icon}}</span><span class="module-number">MODUL {{loop.index}}</span><b>{{m.title}}</b><small>{{m.description}}</small><span class="module-foot">6 ta dars <span>→</span></span></button>{% endfor %}</div>
+</section>
+<section id="curriculumView" class="hidden"><div class="section-head"><div><span class="eyebrow">30 KUNLIK YO‘L XARITASI</span><h2>Barcha darslar</h2></div></div><div id="curriculumList"></div></section>
+<section id="bookmarksView" class="hidden"><div class="section-head"><div><span class="eyebrow">SHAXSIY RO‘YXAT</span><h2>Saqlangan darslar</h2></div></div><div id="bookmarkList"></div></section>
+<section id="lessonView" class="hidden"><button class="back-btn" id="backBtn">← Darslar ro‘yxatiga</button><div id="lessonContent"></div></section>
+<footer>Biznes Akademiya <span>•</span> Bilim — amaliyot bilan kuchli.</footer></main></div><div id="toast" class="toast"></div><script src="/static/app.js"></script></body></html>

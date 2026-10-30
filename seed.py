@@ -40,6 +40,9 @@ DATA=[
 ("Yakuniy loyiha va bilimlarni mustahkamlash","30 kunlik bilimni bitta amaliy biznes rejaga birlashtir: mijoz muammosi, qiymat, auditoriya, kanal, daromad, xarajat, xavf va 90 kunlik reja.","Kichik dasturiy xizmat yoki Telegram bot uchun bir sahifalik biznes modeli tuzish mumkin.","Muammo → mijoz → yechim → marketing → daromad → reja","O‘zing tanlagan loyiha uchun bir sahifalik biznes reja yoz.","Loyiha g‘oyasini 3 potensial mijoz bilan qanday tekshirasan?","Nazariyani amaliyot bilan mustahkamla.",["Taxminlarni tekshir","Raqamlarni hisobla","Kichik sinovdan boshla"])
 ]
 
+if len(MODULES) != 5 or len(DATA) != 30 or any(len(row) != 8 for row in DATA):
+    raise RuntimeError("Seed ma’lumotlari noto‘g‘ri: 5 modul va 30 ta 8 maydonli dars bo‘lishi kerak.")
+
 def seed(app, db, Module, Lesson, Question, Progress):
     """Create the course content using objects supplied by the Flask app.
 

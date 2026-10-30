@@ -1,4 +1,3 @@
-from app import app,db,Module,Lesson,Question,Progress
 import json
 
 MODULES=[
@@ -41,17 +40,35 @@ DATA=[
 ("Yakuniy loyiha va bilimlarni mustahkamlash","30 kunlik bilimni bitta amaliy biznes rejaga birlashtir: mijoz muammosi, qiymat, auditoriya, kanal, daromad, xarajat, xavf va 90 kunlik reja.","Kichik dasturiy xizmat yoki Telegram bot uchun bir sahifalik biznes modeli tuzish mumkin.","Muammo → mijoz → yechim → marketing → daromad → reja","O‘zing tanlagan loyiha uchun bir sahifalik biznes reja yoz.","Loyiha g‘oyasini 3 potensial mijoz bilan qanday tekshirasan?","Nazariyani amaliyot bilan mustahkamla.",["Taxminlarni tekshir","Raqamlarni hisobla","Kichik sinovdan boshla"])
 ]
 
-def seed():
+def seed(app, db, Module, Lesson, Question, Progress):
+    """Create the course content using objects supplied by the Flask app.
+
+    Accepting dependencies as arguments avoids importing app.py from this
+    module and prevents a circular import during application startup.
+    """
     with app.app_context():
         db.create_all()
-        if Lesson.query.count(): return
+        existing = Lesson.query.count()
+        if existing == 30:
+            return
+        if existing:
+            Question.query.delete()
+            Progress.query.delete()
+            Lesson.query.delete()
+            Module.query.delete()
+            db.session.commit()
         day=0
         for mi,(mtitle,mdesc,icon) in enumerate(MODULES):
             module=Module(title=mtitle,description=mdesc,icon=icon)
             db.session.add(module); db.session.flush()
             for j in range(6):
                 day+=1
-                title,theory,example,visual,task,case,takeaways=DATA[day-1]
+                row = DATA[day-1]
+                if day == 1:
+                    title,theory,example,visual,task,case,takeaways = row
+                    key_point = "Pul qiymatni o‘lchash, almashish va saqlashga xizmat qiladi."
+                else:
+                    title,theory,example,visual,task,case,key_point,takeaways = row
                 summary=theory[:180]
                 lesson=Lesson(day=day,module_id=module.id,title=title,summary=summary,theory=theory,
                   example=example,visual=visual,task=task,case_study=case,takeaways=json.dumps(takeaways,ensure_ascii=False))
@@ -67,5 +84,3 @@ def seed():
             db.session.add(Progress(day=d,completed=True,score=100))
         db.session.commit()
 
-if __name__=="__main__":
-    seed()

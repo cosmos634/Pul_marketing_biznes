@@ -73,7 +73,7 @@ def seed(app, db, Module, Lesson, Question, Progress):
                 example, visual, task, case = row[3], row[4], row[5], row[6]
             else:
                 example, visual, task, case = row[2], row[3], row[4], row[5]
-                case = str(case) + "\\nMuhim eslatma: " + str(row[6])
+                case = str(case) + "\nMuhim eslatma: " + str(row[6])
             takeaways = row[7]
             module_index = (day - 1) // 6
             lesson = Lesson.query.filter_by(day=day).first()

@@ -75,6 +75,14 @@ def index():
     current=next((x.day for x in lessons if not Progress.query.filter_by(day=x.day,completed=True).first()),30)
     return render_template("index.html",modules=modules,lessons=lessons,done=done,current=current)
 
+@app.get("/api/lessons")
+def lesson_list():
+    rows=Lesson.query.order_by(Lesson.day).all()
+    return jsonify([{"day":x.day,"title":x.title,"summary":x.summary,
+      "module":x.module.title,"module_id":x.module_id,
+      "completed":bool((Progress.query.filter_by(day=x.day).first() or Progress(day=x.day)).completed)}
+      for x in rows])
+
 @app.get("/api/lesson/<int:day>")
 def get_lesson(day):
     lesson=Lesson.query.filter_by(day=day).first_or_404()

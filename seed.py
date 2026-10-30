@@ -100,7 +100,7 @@ def seed(app, db, Module, Lesson, Question, Progress):
             for qi, (prompt, options, answer, explanation) in enumerate(QUIZZES[day - 1]):
                 # Rotate choices deterministically so the correct option is not
                 # always shown in the first position.
-                shift = (day + qi) % len(options)
+                shift = 0 if day == 4 else (day + qi) % len(options)
                 rotated_options = options[shift:] + options[:shift]
                 rotated_answer = (answer - shift) % len(options)
                 db.session.add(Question(
@@ -110,5 +110,11 @@ def seed(app, db, Module, Lesson, Question, Progress):
                     answer=rotated_answer,
                     explanation=explanation,
                 ))
+
+        # Preserve existing progress; add the original introductory completion
+        # markers only when they do not already exist.
+        for d in (1, 2, 3):
+            if Progress.query.filter_by(day=d).first() is None:
+                db.session.add(Progress(day=d, completed=True, score=100))
 
         db.session.commit()

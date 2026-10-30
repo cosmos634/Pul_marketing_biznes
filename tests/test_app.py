@@ -1,9 +1,38 @@
 import unittest
-from app import app
+from app import app, db, Progress, Note
 
 class AcademyTests(unittest.TestCase):
     def setUp(self):
         self.client=app.test_client()
+        # Keep local learning data unchanged when tests are run on a real device.
+        with app.app_context():
+            p=Progress.query.filter_by(day=4).first()
+            n=Note.query.filter_by(day=4).first()
+            self.old_progress=None if p is None else (p.completed,p.score)
+            self.old_note=None if n is None else n.body
+
+    def tearDown(self):
+        with app.app_context():
+            p=Progress.query.filter_by(day=4).first()
+            if self.old_progress is None:
+                if p is not None:
+                    db.session.delete(p)
+            else:
+                if p is None:
+                    p=Progress(day=4)
+                    db.session.add(p)
+                p.completed,p.score=self.old_progress
+
+            n=Note.query.filter_by(day=4).first()
+            if self.old_note is None:
+                if n is not None:
+                    db.session.delete(n)
+            else:
+                if n is None:
+                    n=Note(day=4)
+                    db.session.add(n)
+                n.body=self.old_note
+            db.session.commit()
 
     def test_dashboard_loads(self):
         response=self.client.get("/")

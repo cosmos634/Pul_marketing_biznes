@@ -66,14 +66,22 @@ def seed(app, db, Module, Lesson, Question, Progress):
 
         # Update lesson content in place; do not delete Progress, Note or Bookmark.
         for day, row in enumerate(DATA, start=1):
-            title, summary, theory, example, visual, task, case, takeaways = row
+            title, summary = row[0], row[1]
+            # Legacy rows were authored with a slightly different field order
+            # after day 1. Normalize them here so tasks/examples land correctly.
+            if day == 1:
+                example, visual, task, case = row[3], row[4], row[5], row[6]
+            else:
+                example, visual, task, case = row[2], row[3], row[4], row[5]
+                case = str(case) + "\\nMuhim eslatma: " + str(row[6])
+            takeaways = row[7]
             module_index = (day - 1) // 6
             lesson = Lesson.query.filter_by(day=day).first()
             values = dict(
                 module_id=modules[module_index].id,
                 title=title,
                 summary=summary,
-                theory=theory + "\\n\\n" + EXTRA_EXPLANATIONS[day - 1],
+                theory=EXTRA_EXPLANATIONS[day - 1],
                 example=example,
                 visual=visual,
                 task=task,
@@ -89,12 +97,17 @@ def seed(app, db, Module, Lesson, Question, Progress):
 
             # Replace only this day's old quiz items. Learning progress is untouched.
             Question.query.filter_by(day=day).delete(synchronize_session=False)
-            for prompt, options, answer, explanation in QUIZZES[day - 1]:
+            for qi, (prompt, options, answer, explanation) in enumerate(QUIZZES[day - 1]):
+                # Rotate choices deterministically so the correct option is not
+                # always shown in the first position.
+                shift = (day + qi) % len(options)
+                rotated_options = options[shift:] + options[:shift]
+                rotated_answer = (answer - shift) % len(options)
                 db.session.add(Question(
                     day=day,
                     prompt=prompt,
-                    options=json.dumps(options, ensure_ascii=False),
-                    answer=answer,
+                    options=json.dumps(rotated_options, ensure_ascii=False),
+                    answer=rotated_answer,
                     explanation=explanation,
                 ))
 

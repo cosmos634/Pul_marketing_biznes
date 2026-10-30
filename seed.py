@@ -8,7 +8,7 @@ MODULES=[
 ("Strategiya va yakuniy loyiha","Uzoq muddatli yo‘nalish, xavf va amaliy biznes reja.","🎯")
 ]
 DATA=[
-("Pul nima va u qanday ishlaydi","Pul — qiymatni o‘lchash, ayirboshlash va saqlash vositasi. Inflyatsiya xarid qobiliyatiga ta’sir qiladi.","Masalan, 100 somoniga mahsulot olib, 120 somoniga sotding. Foyda xarajatlarni ayirgandan keyin aniqlanadi.","Pul → daromad → xarajat → jamg‘arma → kapital","Bir hafta davomida xarajatlaringni yozib bor.","Pul ko‘paygani boylik ko‘payganini anglatadimi?",["Pul vosita, maqsad emas","Tushum foyda degani emas","Xarid qobiliyatini hisobga ol"]),
+("Pul nima va u qanday ishlaydi","Pul — qiymatni o‘lchash, ayirboshlash va saqlash vositasi. Inflyatsiya xarid qobiliyatiga ta’sir qiladi.","Pul uch vazifani bajaradi: qiymatni o‘lchash, ayirboshlashni osonlashtirish va qiymatni saqlash. Pulning xarid qobiliyati inflyatsiya ta’sirida o‘zgarishi mumkin.","Masalan, 100 somoniga mahsulot olib, 120 somoniga sotding. Foyda xarajatlarni ayirgandan keyin aniqlanadi.","Pul → daromad → xarajat → jamg‘arma → kapital","Bir hafta davomida xarajatlaringni yozib bor.","Pul ko‘paygani boylik ko‘payganini anglatadimi?",["Pul vosita, maqsad emas","Tushum foyda degani emas","Xarid qobiliyatini hisobga ol"]),
 ("Daromad, xarajat va foyda","Daromad — kirim, xarajat — sarf, foyda esa daromaddan xarajatlarni ayirgandagi natija. Formula: foyda = daromad − xarajat.","Xizmatdan 500 somoni tushdi, xarajat 80 somoni bo‘ldi. Qolgan 420 somoni — xarajatlardan keyingi natija.","Daromad − xarajat = foyda","Oxirgi haftadagi daromad va xarajatlaringni jadvalga yoz.","Ko‘p buyurtma oladigan, lekin har birida zarar ko‘radigan xizmat egasini tahlil qil.","Foydani tushum bilan adashtirma.",["Har bir xarajatni hisobga ol","Sof natijani ko‘r","Raqamlarni yozib bor"]),
 ("Aktiv va majburiyatlar","Aktiv — qiymatga ega va foyda keltirishi mumkin bo‘lgan resurs. Majburiyat — to‘lanishi kerak bo‘lgan qarz. Har bir qimmat buyum daromad keltiruvchi aktiv emas.","Daromad topishda ishlatiladigan noutbuk aktiv bo‘lishi mumkin. Foiz bilan qaytariladigan qarz majburiyatdir.","Aktivlar − majburiyatlar = sof kapital","O‘zing bilgan 5 ta aktiv va 5 ta majburiyat misolini yoz.","Ish uchun uskuna olish va faqat ko‘rinish uchun qimmat buyum olishni solishtir.","Aktivning vazifasini tekshir.",["Aktiv va buyumni farqla","Qarz shartlarini tushun","Sof kapitalni kuzat"]),
 ("Pul oqimi va budjet","Pul oqimi — ma’lum davrdagi kirim va chiqim. Budjet pulni oldindan rejalashtiradi. Foyda borligi hozir naqd pul borligini anglatmaydi.","Mijoz 30 kundan keyin to‘lasa, xizmat foydali bo‘lsa ham hozirgi xarajatni qoplash qiyin bo‘lishi mumkin.","Kirim → taqsimlash → zarur xarajat → jamg‘arma","Bir oylik oddiy budjet tuz.","Mijozlar kech to‘laydi, ijara esa vaqtida to‘lanadi. Pul oqimini qanday boshqarasan?","Kirim va chiqim sanasi muhim.",["Kirim-chiqimni qayd et","Zaxira pul saqla","Rejani yangila"]),
@@ -63,13 +63,7 @@ def seed(app, db, Module, Lesson, Question, Progress):
             db.session.add(module); db.session.flush()
             for j in range(6):
                 day+=1
-                row = DATA[day-1]
-                if day == 1:
-                    title,theory,example,visual,task,case,takeaways = row
-                    key_point = "Pul qiymatni o‘lchash, almashish va saqlashga xizmat qiladi."
-                else:
-                    title,theory,example,visual,task,case,key_point,takeaways = row
-                summary=theory[:180]
+                title,summary,theory,example,visual,task,case,takeaways = DATA[day-1]
                 lesson=Lesson(day=day,module_id=module.id,title=title,summary=summary,theory=theory,
                   example=example,visual=visual,task=task,case_study=case,takeaways=json.dumps(takeaways,ensure_ascii=False))
                 db.session.add(lesson); db.session.flush()
